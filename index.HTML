@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Car Recommender — Preferences</title>
+    <link rel="stylesheet" href="Q.CSS">
+</head>
+
+<body>
+    <!-- animated slideshow background -->
+    <div class="bg-slide"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="container">
+        <header class="site-header">
+            <h1 style="color:white"> Car Recommendation System </h1>
+            <p style="color:white">Choose your preferences</p>
+        </header>
+
+        <section class="glass form-section">
+            <h2 style="margin-bottom:12px;">Set your preferences</h2>
+
+            <form id="prefForm">
+                <div class="form-grid">
+                    <div>
+                        <div class="form-row">
+                            <label for="budget">Maximum Budget (₹)</label>
+                            <input id="budget" type="number" placeholder="e.g. 3000000">
+                        </div>
+
+                        <div class="form-row">
+                            <label for="fuel">Fuel Type</label>
+                            <select id="fuel">
+                <option value="">Any</option>
+                <option>Petrol</option>
+                <option>Diesel</option>
+                <option>Electric</option>
+                <option>Hybrid</option>
+                <option>Hydrogen</option>
+                <option>CNG</option>
+              </select>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="body">Body Type</label>
+                            <select id="body">
+                <option value="">Any</option>
+                <option>Sedan</option>
+                <option>SUV</option>
+                <option>Hatchback</option>
+                <option>MPV</option>
+                <option>Pickup</option>
+                <option>Sports</option>
+                <option>Truck</option>
+              </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-row">
+                            <label for="brand">Brand</label>
+                            <select id="brand">
+                <option value="">Any</option>
+                <option>Toyota</option><option>Honda</option><option>Tesla</option><option>BMW</option><option>Audi</option>
+                <option>Mercedes</option><option>Kia</option><option>Hyundai</option><option>Maruti</option><option>Tata</option>
+              </select>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="safety">Min Safety Rating (stars)</label>
+                            <select id="safety">
+                <option value="">Any</option>
+                <option value="3">3+</option><option value="4">4+</option><option value="5">5</option>
+              </select>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="seating">Minimum Seating</label>
+                            <input id="seating" type="number" min="1" placeholder="e.g. 5">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top:10px;">
+                    <label for="features">Required features (comma separated)</label>
+                    <input id="features" type="text" placeholder="AC, Bluetooth, GPS, Autopilot">
+                    <div class="feature-chips" style="margin-top:8px;">
+                        <button type="button" class="chip" data-feature="AC">AC</button>
+                        <button type="button" class="chip" data-feature="Bluetooth">Bluetooth</button>
+                        <button type="button" class="chip" data-feature="GPS">GPS</button>
+                        <button type="button" class="chip" data-feature="Autopilot">Autopilot</button>
+                        <button type="button" class="chip" data-feature="Sunroof">Sunroof</button>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button type="button" id="clearBtn" class="btn ghost">Clear</button>
+                    <button type="submit" id="submitBtn" class="btn primary">Get Recommendations →</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        /* chips behavior */
+        document.querySelectorAll('.chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                chip.classList.toggle('active');
+                const fInput = document.getElementById('features');
+                const cur = fInput.value.split(',').map(s => s.trim()).filter(Boolean);
+                const feat = chip.dataset.feature;
+                if (chip.classList.contains('active')) {
+                    if (!cur.includes(feat)) cur.push(feat);
+                } else {
+                    const i = cur.indexOf(feat);
+                    if (i >= 0) cur.splice(i, 1);
+                }
+                fInput.value = cur.join(', ');
+            });
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            document.getElementById('prefForm').reset();
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            document.getElementById('features').value = '';
+        });
+
+        /* submit preferences and move to results page */
+        document.getElementById('prefForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const prefs = {
+                budget: document.getElementById('budget').value,
+                brand: document.getElementById('brand').value,
+                fuel: document.getElementById('fuel').value,
+                body: document.getElementById('body').value,
+                safety: document.getElementById('safety').value,
+                seating: document.getElementById('seating').value,
+                features: document.getElementById('features').value
+            };
+            localStorage.setItem('carPreferences', JSON.stringify(prefs));
+            // open results page in same tab
+            window.location.href = 'RE.HTML ';
+        });
+    </script>
+</body>
+
+</html>
